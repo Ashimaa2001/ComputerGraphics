@@ -13,65 +13,61 @@
 
 using namespace std;
 
-float ballX = 0.1f;
-float ballY = -0.2f;
-float ballZ = -1.0f;
 
-float faceX= 0.1f;
-float faceY= -0.11f;
-float faceZ= -1.0f;
+float ball[3]={0.1f,-0.2f,-1.0f};
 
-float eye1_X = 0.3f;
-float eye1_Y = 0.0f;
-float eye1_Z = -1.0f;
+float face[3]={0.1f, -0.11f, -1.0f};
+
+float eye1[3]={0.12f, 0.032f,-1.0f};
+
+float eye2[3]={0.05f, -0.09f,-1.0f};
 
 static int flag=1;
 
 void drawBall(float X,float Y,float Z, float rad) {
 
-
     glTranslatef(X,Y,Z); //moving it toward the screen a bit on creation
     glutSolidSphere (rad, 30,50);//eate ball.
-
-       glEnd();
-
+    glEnd();
 
 }
 
 void keyPress(int key, int x, int y)
 {
     if(key==GLUT_KEY_RIGHT)
-    {ballX += 0.05f;
-        faceX+=0.05f;}
+    {ball[0] += 0.05f;
+        face[0]+=0.05f;
+        eye1[0]+=0.05f;
+        eye2[0]+=0.05f;}
     if(key==GLUT_KEY_LEFT){
-        ballX  -= 0.05f;
-        faceX-=0.05f;}
+        ball[0]  -= 0.05f;
+        face[0]-=0.05f;
+        eye1[0]-=0.05f;
+        eye2[0]-=0.05f;}
     if(key==GLUT_KEY_UP){
-        ballY += 0.05f;
-        faceY+=0.05f;}
+        ball[1] += 0.05f;
+        face[1]+=0.05f;
+        eye1[1]+=0.05f;
+        eye2[1]+=0.05f;}
     if(key==GLUT_KEY_DOWN){
-        ballY -= 0.05f;
-        faceY-=0.05f;}
+        ball[1] -= 0.05f;
+        face[1]-=0.05f;
+        eye1[1]-=0.05f;
+        eye2[1]-=0.05f;}
 
-
-            glutPostRedisplay();
+        glutPostRedisplay();
         }
         void initRendering()
         {
-            //glEnable(GL_DEPTH_TEST);
 
             glClearColor(1.0, 1.0, 0.0, 1.0);
 
-            // making picture color green (in RGB mode), as middle argument is 1.0
             glColor3f(0.0, 1.0, 0.0);
 
-            // breadth of picture boundary is 1 pixel
             glPointSize(10);
             glMatrixMode(GL_PROJECTION);
             glLoadIdentity();
 
-            // setting window dimension in X- and Y- direction
-            //gluOrtho2D(-780, 780, -420, 420);
             gluOrtho2D(-1.0, 1.0, -1.0, 1.0);
         }
 
@@ -98,35 +94,17 @@ void keyPress(int key, int x, int y)
             glMatrixMode(GL_MODELVIEW);
 
             glLoadIdentity();
-            glColor3f(0.4, 0.4, 0.4);
-            drawBall(faceX, faceY, faceZ, 0.03);
-            glColor3f(1.0, 0.0, 0.0);
-            drawBall(ballX, ballY, ballZ, 0.1);
+            glColor3f(0.4, 0.4, 0.4); //set ball colour
+            drawBall(face[0], face[1], face[2], 0.03f);
+
+            glColor3f(1.0, 0.0, 0.0); //set ball colour
+            drawBall(ball[0], ball[1], ball[2], 0.1f);
+
+            glColor3f(0.0, 0.0, 0.0); //set ball colour
+            drawBall(eye1[0], eye1[1], eye1[2], 0.01f);
+            drawBall(eye2[0], eye2[1], eye2[2], 0.015f);
 
             glutSwapBuffers();
-        }
-
-        void update(int value) {
-            if(flag)
-            {
-            ballX += 0.001f;
-               if(ballX>0.3)
-               {
-                   flag=0;
-
-               }
-            }
-            if (!flag)
-            {
-                ballX -= 0.001f;
-                if(ballX<-0.3)
-               {
-                   flag=1;
-
-               }
-            }
-
-            glutPostRedisplay(); 
         }
 
         int main(int argc,char** argv)
@@ -135,7 +113,7 @@ void keyPress(int key, int x, int y)
 
             glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGB|GLUT_DEPTH);
 
-            glutInitWindowSize(400,400);
+            glutInitWindowSize(500,500);
 
             glutCreateWindow("Moving Circle");
 
@@ -145,9 +123,6 @@ void keyPress(int key, int x, int y)
 
             glutSpecialFunc(keyPress);
             glutReshapeFunc(handleResize);
-            //autorot();
-
-            glutTimerFunc(25, update, 0);
             glFlush();
             glutMainLoop();
 
