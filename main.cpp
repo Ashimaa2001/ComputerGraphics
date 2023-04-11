@@ -13,21 +13,17 @@
 
 using namespace std;
 
-
 float ball[3]={0.1f,-0.2f,-1.0f};
-
 float face[3]={0.1f, -0.11f, -1.0f};
-
 float eye1[3]={0.12f, 0.032f,-1.0f};
-
 float eye2[3]={0.05f, -0.09f,-1.0f};
 
 static int flag=1;
 
-void drawBall(float X,float Y,float Z, float rad) {
+void draw(float X,float Y,float Z, float rad) {
 
-    glTranslatef(X,Y,Z); //moving it toward the screen a bit on creation
-    glutSolidSphere (rad, 30,50);//eate ball.
+    glTranslatef(X,Y,Z);
+    glutSolidSphere (rad, 30,50);
     glEnd();
 
 }
@@ -73,12 +69,12 @@ void initRendering()
 void handleResize(int w, int h)
 {
     glViewport(0, 0, w, h);
-    glMatrixMode(GL_PROJECTION); //Switch to setting the camera perspective
-    glLoadIdentity(); //Reset the camera
-    gluPerspective(45.0,                  //The camera angle
-            (double)w / (double)h, //The width-to-height ratio
-            1.0,                   //The near z clipping coordinate
-            200.0);                //The far z clipping coordinate
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluPerspective(45.0,
+            (double)w / (double)h,
+            1.0,
+            200.0);
 }
 
 void drawScene()
@@ -88,14 +84,14 @@ void drawScene()
 
     glLoadIdentity();
     glColor3f(0.4, 0.4, 0.4);
-    drawBall(face[0], face[1], face[2], 0.03f);
+    draw(face[0], face[1], face[2], 0.03f);
 
     glColor3f(1.0, 0.0, 0.0);
-    drawBall(ball[0], ball[1], ball[2], 0.1f);
+    draw(ball[0], ball[1], ball[2], 0.1f);
 
     glColor3f(0.0, 0.0, 0.0);
-    drawBall(eye1[0], eye1[1], eye1[2], 0.01f);
-    drawBall(eye2[0], eye2[1], eye2[2], 0.015f);
+    draw(eye1[0], eye1[1], eye1[2], 0.01f);
+    draw(eye2[0], eye2[1], eye2[2], 0.015f);
 
     glutSwapBuffers();
 }
