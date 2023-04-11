@@ -15,21 +15,15 @@ using namespace std;
 
 
 float ball[3]={0.1f,-0.2f,-1.0f};
-
 float face[3]={0.1f, -0.11f, -1.0f};
-
 float eye1[3]={0.12f, 0.032f,-1.0f};
-
 float eye2[3]={0.05f, -0.09f,-1.0f};
-
 static int flag=1;
 
 void drawBall(float X,float Y,float Z, float rad) {
-
     glTranslatef(X,Y,Z); //moving it toward the screen a bit on creation
     glutSolidSphere (rad, 30,50);//eate ball.
     glEnd();
-
 }
 
 void keyPress(int key, int x, int y)
@@ -55,9 +49,10 @@ void keyPress(int key, int x, int y)
         eye1[1]-=0.05f;
         eye2[1]-=0.05f;}
 
-        glutPostRedisplay();
-        }
-        void initRendering()
+     glutPostRedisplay();
+}
+
+void initRendering()
         {
 
             glClearColor(1.0, 1.0, 0.0, 1.0);
@@ -85,10 +80,10 @@ void keyPress(int key, int x, int y)
                            (double)w / (double)h, //The width-to-height ratio
                            1.0,                   //The near z clipping coordinate
                            200.0);                //The far z clipping coordinate
-        }
+}
 
-        void drawScene()
-        {
+void drawScene()
+{
             glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
             glMatrixMode(GL_MODELVIEW);
@@ -105,7 +100,7 @@ void keyPress(int key, int x, int y)
             drawBall(eye2[0], eye2[1], eye2[2], 0.015f);
 
             glutSwapBuffers();
-        }
+}
 
         int main(int argc,char** argv)
         {
