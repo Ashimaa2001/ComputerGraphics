@@ -187,6 +187,16 @@ void idle() {
     glutPostRedisplay();
 }
 
+
+void DisplayHealthBar1() {
+	char temp1[40];
+	glColor3f(1 ,1 ,1);
+	sprintf(temp1,"  LIFE = %d",alienLife1);
+	displayRasterText(-1100 ,600 ,0.4 ,temp1);
+	glColor3f(1 ,0 ,0);
+}
+
+
 void gameScreenDisplay()
 {
     DrawPlayer();
@@ -217,14 +227,12 @@ void gameScreenDisplay()
 void gameStartDisplay()
 {
     DrawPlayer();
+    drawBalloon(balloonX, balloonY);
+    drawBalloon(balloon2X, balloon2Y);
     if(laser1) {
         DrawLaser(xOne, yOne, laser1Dir);
     }
-
 }
-
-
-
 
 
 void mouseClick(int buttonPressed ,int state ,int x, int y) {
@@ -240,8 +248,6 @@ void keyOperations(){
 
     if(keyStates[13] == true && viewPage == GAME) {
 		viewPage = GAME_START;
-		printf("view value changed to %d", viewPage);
-		printf("enter key pressed\n");
 	}
     if(keyStates['s'] == true) {
 			laser1 = true;
