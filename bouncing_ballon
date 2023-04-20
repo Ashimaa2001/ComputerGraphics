@@ -1,0 +1,61 @@
+#include <GLUT/glut.h>
+#include <stdlib.h>
+#include <time.h>
+#include <math.h>
+
+// Global variables
+float balloonX = 0.0f; // X position of the balloon
+float balloonY = 0.0f; // Y position of the balloon
+float balloonSpeedX = 0.01f; // Speed of the balloon in X direction
+float balloonSpeedY = 0.005f; // Speed of the balloon in Y direction
+float balloonRadius = 0.1f; // Radius of the balloon
+
+void drawBalloon() {
+    glColor3f(1.0f, 0.0f, 0.0f); // Set color to red
+    glBegin(GL_POLYGON);
+    for (int i = 0; i < 360; i += 10) {
+        float theta = i * 3.1415926 / 180.0f;
+        float x = balloonX + balloonRadius * cosf(theta);
+        float y = balloonY + balloonRadius * sinf(theta);
+        glVertex2f(x, y);
+    }
+    glEnd();
+}
+
+void display() {
+    glClear(GL_COLOR_BUFFER_BIT);
+    glLoadIdentity();
+
+    drawBalloon(); // Draw the balloon
+
+    glutSwapBuffers();
+}
+
+void idle() {
+    // Update balloon position
+    balloonX += balloonSpeedX;
+    balloonY += balloonSpeedY;
+
+    // Check for collision with window boundaries
+    if (balloonX + balloonRadius > 1.0f || balloonX - balloonRadius < -1.0f) {
+        balloonSpeedX = -balloonSpeedX; // Reverse X direction
+    }
+    if (balloonY + balloonRadius > 1.0f || balloonY - balloonRadius < -1.0f) {
+        balloonSpeedY = -balloonSpeedY; // Reverse Y direction
+    }
+
+    glutPostRedisplay();
+}
+
+int main(int argc, char** argv) {
+    srand(time(NULL)); // Seed the random number generator with the current time
+
+    glutInit(&argc, argv);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
+    glutInitWindowSize(800, 600);
+    glutCreateWindow("Bouncing Balloon in OpenGL");
+    glutDisplayFunc(display);
+    glutIdleFunc(idle);
+    glutMainLoop();
+    return 0;
+}
