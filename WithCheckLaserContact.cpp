@@ -43,6 +43,7 @@ float balloonSpeedY= 0.5f;
 float balloonSpeed2X= 0.5f;
 float balloonSpeed2Y= 0.5f;
 float d=0;
+int lives=100;
 
 float balloonRadius = 40.0f;
 int alienLife1 = 100;
@@ -182,10 +183,17 @@ void checkLaserContact(int x, int y, bool dir[], int xp, int yp, bool player1) {
 	//printf();
 	if((d>=0)) {
 		if(player1){
-			cout<<"Out "<<endl;
+			cout<<"That's a hit "<<endl;
 			balloonRadius/=1.1;
 			delay(0.2);}
+	}
+}
 
+void checkPlayerContact(float X, float Y) {
+
+	if((X<xOne+50 && Y<yOne+50 && X>xOne && Y>yOne)) {
+			cout<<"Life reduced to "<<lives<<endl;
+			lives-=1;
 	}
 }
 
@@ -271,6 +279,8 @@ void gameStartDisplay()
     DrawPlayer();
     drawBalloon(balloonX, balloonY);
     drawBalloon(balloon2X, balloon2Y);
+    checkPlayerContact(balloonX, balloonY);
+    checkPlayerContact(balloon2X, balloon2Y);
     if(laser1) {
         DrawLaser(xOne, yOne, laser1Dir);
         checkLaserContact(xOne, yOne, laser1Dir, balloonX, balloonY, true);
@@ -348,19 +358,19 @@ void keyReleased(unsigned char key, int x, int y) {
 
 int main(int argc, char **argv)
 {
-	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_SINGLE|GLUT_RGB);
+    glutInit(&argc, argv);
+    glutInitDisplayMode(GLUT_SINGLE|GLUT_RGB);
     glutInitWindowPosition(0, 0);
     glutInitWindowSize(600, 500);
     glutCreateWindow("Shooting Game");
     init();
     glutIdleFunc(refresh);
     glutKeyboardFunc(keyPressed);
-	glutKeyboardUpFunc(keyReleased);
-	glutPassiveMotionFunc(passiveMotionFunc);
-	glutMouseFunc(mouseClick);
-	glGetIntegerv(GL_VIEWPORT ,m_viewport);
-	glutIdleFunc(idle);
+    glutKeyboardUpFunc(keyReleased);
+    glutPassiveMotionFunc(passiveMotionFunc);
+    glutMouseFunc(mouseClick);
+    glGetIntegerv(GL_VIEWPORT ,m_viewport);
+    glutIdleFunc(idle);
     glutDisplayFunc(display);
     glutMainLoop();
 }
