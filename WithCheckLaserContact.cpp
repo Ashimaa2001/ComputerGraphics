@@ -6,7 +6,7 @@
 
 #define XMAX 1200
 #define YMAX 700
-#define SPACESHIP_SPEED 0.05
+#define SPEED 0.05
 #define TOP 0
 #define RIGHT 1
 #define BOTTOM 2
@@ -43,6 +43,7 @@ float balloonSpeed2X= 0.5f;
 float balloonSpeed2Y= 0.5f;
 float d=0;
 int lives=100;
+bool win= false;
 
 float balloonRadius = 40.0f;
 int alienLife1 = 100;
@@ -181,6 +182,11 @@ void checkLaserContact(int x, int y, bool dir[], int xp, int yp, bool player1) {
 		if(player1){
 			cout<<"That's a hit "<<endl;
 			balloonRadius/=1.1;
+			if(balloonRadius<20.0){
+                viewPage= GAME_OVER;
+                balloonRadius= 40.0;
+                win= true;
+			}
 			delay(1);}
 	}
 }
@@ -315,7 +321,12 @@ void gameOverDisplay()
 	glEnd();
 
 	glColor3f(1.0, 1.0, 1.0);
-	displayRasterText(-200 ,200 ,0.4 ,"GAME OVER!");
+	if(win==false){
+        displayRasterText(-200 ,200 ,0.4 ,"GAME OVER!");}
+
+	else{
+        displayRasterText(-200 ,200 ,0.4 ,"YOU WON!");
+	}
 	glColor3f(0.0, 0.0, 0.0);
 
 	if(mouseX>=-200 && mouseX<=100 && mouseY>=-50 && mouseY<=40){
@@ -362,10 +373,10 @@ void keyOperations(){
 		}
 		else {
 			laser1 = false;
-			if(keyStates['d'] == true) xOne+=SPACESHIP_SPEED;
-			if(keyStates['a'] == true) xOne-=SPACESHIP_SPEED;
-			if(keyStates['w'] == true) yOne+=SPACESHIP_SPEED;
-			if(keyStates['x'] == true) yOne-=SPACESHIP_SPEED;
+			if(keyStates['d'] == true) xOne+=SPEED;
+			if(keyStates['a'] == true) xOne-=SPEED;
+			if(keyStates['w'] == true) yOne+=SPEED;
+			if(keyStates['x'] == true) yOne-=SPEED;
 		}
 }
 
@@ -417,17 +428,17 @@ int main(int argc, char **argv)
 {
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_SINGLE|GLUT_RGB);
-    glutInitWindowPosition(0, 0);
-    glutInitWindowSize(600, 500);
-    glutCreateWindow("Shooting Game");
-    init();
-    glutIdleFunc(refresh);
-    glutKeyboardFunc(keyPressed);
+    	glutInitWindowPosition(0, 0);
+    	glutInitWindowSize(600, 500);
+    	glutCreateWindow("Shooting Game");
+    	init();
+    	glutIdleFunc(refresh);
+    	glutKeyboardFunc(keyPressed);
 	glutKeyboardUpFunc(keyReleased);
 	glutPassiveMotionFunc(passiveMotionFunc);
 	glutMouseFunc(mouseClick);
 	glGetIntegerv(GL_VIEWPORT ,m_viewport);
 	glutIdleFunc(idle);
-    glutDisplayFunc(display);
-    glutMainLoop();
+    	glutDisplayFunc(display);
+    	glutMainLoop();
 }
