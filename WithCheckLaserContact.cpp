@@ -14,13 +14,20 @@
 
 #include<GL/glut.h>
 
+#include <time.h>
+void delay(float secs)
+{
+	float end = clock()/CLOCKS_PER_SEC + secs;
+	while((clock()/CLOCKS_PER_SEC) < end);
+}
+
 
 using namespace std;
 
 enum view {MENU, GAME, GAME_START, GAMEOVER};
 view viewPage = MENU;
 float xOne = 720, yOne = 0;
-float xTwo = 720, yTwo = 0;
+float xTwo = 720, yTwo = 300;
 bool mButtonPressed = false;
 bool laser1 = false;
 bool keyStates[256] = {false};
@@ -35,6 +42,7 @@ float balloonSpeedX= 0.5f;
 float balloonSpeedY= 0.5f;
 float balloonSpeed2X= 0.5f;
 float balloonSpeed2Y= 0.5f;
+float d=0;
 
 float balloonRadius = 40.0f;
 int alienLife1 = 100;
@@ -144,8 +152,9 @@ void DrawLaser(int x, int y, bool dir[]) {
 	glLineWidth(2.5);
 	glColor3f(0, 1, 0);
 	glBegin(GL_LINES);
-		glVertex2f(x, y);
-		glVertex2f(xend, yend);
+    glVertex2f(x, y);
+    glVertex2f(xend, yend);
+
 	glEnd();
 }
 
@@ -169,13 +178,13 @@ void checkLaserContact(int x, int y, bool dir[], int xp, int yp, bool player1) {
 	float a = 1 + m * m;
 	float c = xp * xp + (k - yp) * (k - yp) - r * r;
 
-	float d = (b * b - 4 * a * c); // discriminant for the equation
+	d = (b * b - 4 * a * c); // discriminant for the equation
 	//printf();
-	if(d >= 0) {
-		if(player1)
-			cout<<"Player 1 "<<endl;
-		else
-			cout<<"Player 2"<<endl;
+	if((d>=0)) {
+		if(player1){
+			cout<<"Out "<<endl;
+			balloonRadius/=1.1;
+			delay(0.2);}
 
 	}
 }
@@ -264,7 +273,8 @@ void gameStartDisplay()
     drawBalloon(balloon2X, balloon2Y);
     if(laser1) {
         DrawLaser(xOne, yOne, laser1Dir);
-        checkLaserContact(xOne, yOne, laser1Dir, -xTwo, yTwo, true);
+        checkLaserContact(xOne, yOne, laser1Dir, balloonX, balloonY, true);
+        checkLaserContact(xOne, yOne, laser1Dir, balloon2X, balloon2Y, true);
     }
 }
 
