@@ -14,13 +14,6 @@
 
 #include<GL/glut.h>
 #include <time.h>
-
-void delay(float secs)
-{
-	float end = clock()/CLOCKS_PER_SEC + secs;
-	while((clock()/CLOCKS_PER_SEC) < end);
-}
-
 using namespace std;
 
 enum view {MENU, GAME, GAME_START, GAME_OVER};
@@ -47,6 +40,12 @@ bool win= false;
 
 float balloonRadius = 40.0f;
 int alienLife1 = 100;
+
+void delay(float secs)
+{
+	float end = clock()/CLOCKS_PER_SEC + secs;
+	while((clock()/CLOCKS_PER_SEC) < end);
+}
 
 void init()
 {
@@ -187,7 +186,7 @@ void checkLaserContact(int x, int y, bool dir[], int xp, int yp, bool player1) {
                 balloonRadius= 40.0;
                 win= true;
 			}
-			delay(1);}
+			delay(0.01);}
 	}
 }
 
@@ -428,17 +427,17 @@ int main(int argc, char **argv)
 {
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_SINGLE|GLUT_RGB);
-    	glutInitWindowPosition(0, 0);
-    	glutInitWindowSize(600, 500);
-    	glutCreateWindow("Shooting Game");
-    	init();
-    	glutIdleFunc(refresh);
-    	glutKeyboardFunc(keyPressed);
+    glutInitWindowPosition(0, 0);
+    glutInitWindowSize(600, 500);
+    glutCreateWindow("Shooting Game");
+    init();
+    glutIdleFunc(refresh);
+    glutKeyboardFunc(keyPressed);
 	glutKeyboardUpFunc(keyReleased);
 	glutPassiveMotionFunc(passiveMotionFunc);
 	glutMouseFunc(mouseClick);
 	glGetIntegerv(GL_VIEWPORT ,m_viewport);
 	glutIdleFunc(idle);
-    	glutDisplayFunc(display);
-    	glutMainLoop();
+    glutDisplayFunc(display);
+    glutMainLoop();
 }
