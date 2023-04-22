@@ -13,18 +13,17 @@
 #define LEFT 3
 
 #include<GL/glut.h>
-
 #include <time.h>
+
 void delay(float secs)
 {
 	float end = clock()/CLOCKS_PER_SEC + secs;
 	while((clock()/CLOCKS_PER_SEC) < end);
 }
 
-
 using namespace std;
 
-enum view {MENU, GAME, GAME_START, GAMEOVER};
+enum view {MENU, GAME, GAME_START, GAME_OVER};
 view viewPage = MENU;
 float xOne = 720, yOne = 0;
 float xTwo = 720, yTwo = 300;
@@ -47,8 +46,6 @@ int lives=100;
 
 float balloonRadius = 40.0f;
 int alienLife1 = 100;
-
-
 
 void init()
 {
@@ -180,12 +177,11 @@ void checkLaserContact(int x, int y, bool dir[], int xp, int yp, bool player1) {
 	float c = xp * xp + (k - yp) * (k - yp) - r * r;
 
 	d = (b * b - 4 * a * c); // discriminant for the equation
-	//printf();
 	if((d>=0)) {
 		if(player1){
 			cout<<"That's a hit "<<endl;
 			balloonRadius/=1.1;
-			delay(0.2);}
+			delay(1);}
 	}
 }
 
@@ -194,6 +190,7 @@ void checkPlayerContact(float X, float Y) {
 	if((X<xOne+50 && Y<yOne+50 && X>xOne && Y>yOne)) {
 			cout<<"Life reduced to "<<lives<<endl;
 			lives-=1;
+			viewPage=GAME_OVER;
 	}
 }
 
@@ -288,6 +285,63 @@ void gameStartDisplay()
     }
 }
 
+void gameOverDisplay()
+{
+	glLineWidth(5);
+
+	glColor3f(1,1,1);
+	glBegin(GL_LINE_LOOP);
+		glVertex2f(-800 ,-500);
+		glVertex2f(-800 ,500);
+		glVertex2f(800 ,500);
+		glVertex2f(800 ,-500);
+	glEnd();
+
+	glLineWidth(1);
+
+	glColor3f(0.0, 0.95, 0.99);
+	glBegin(GL_POLYGON);				//Start Game Button
+		glVertex2f(-250 ,-50);
+		glVertex2f(-250 ,40);
+		glVertex2f(250 ,40);
+		glVertex2f(250 ,-50);
+	glEnd();
+
+	glBegin(GL_POLYGON);				//Quit Button
+		glVertex2f(-250 ,-300);
+		glVertex2f(-250 ,-210);
+		glVertex2f(250, -210);
+		glVertex2f(250, -300);
+	glEnd();
+
+	glColor3f(1.0, 1.0, 1.0);
+	displayRasterText(-200 ,200 ,0.4 ,"GAME OVER!");
+	glColor3f(0.0, 0.0, 0.0);
+
+	if(mouseX>=-200 && mouseX<=100 && mouseY>=-50 && mouseY<=40){
+		glColor3f(0 ,0 ,1) ;
+		if(mButtonPressed){
+			viewPage = GAME;
+			mButtonPressed = false;
+			alienLife1 = 100;
+		}
+	} else
+		glColor3f(0 , 0, 0);
+
+    displayRasterText(-200 ,-30 ,0.4 ,"New Game");
+		if(mouseX>=-200 && mouseX<=100 && mouseY>=-170 && mouseY<=-100){
+		glColor3f(0 ,0 ,1);
+		if(mButtonPressed){
+			mButtonPressed = false;
+			exit(0);
+		}
+	}
+	else
+		glColor3f(0 , 0, 0);
+    displayRasterText(-100 ,-280 ,0.4 ,"Quit");
+
+}
+
 
 void mouseClick(int buttonPressed ,int state ,int x, int y) {
 
@@ -328,6 +382,9 @@ void display()
 	else if(viewPage==GAME_START){
         gameStartDisplay();
 	}
+	else if(viewPage==GAME_OVER){
+        gameOverDisplay();
+	}
 	glFlush();
 	glLoadIdentity();
 	glutSwapBuffers();
@@ -358,19 +415,19 @@ void keyReleased(unsigned char key, int x, int y) {
 
 int main(int argc, char **argv)
 {
-    glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_SINGLE|GLUT_RGB);
+	glutInit(&argc, argv);
+	glutInitDisplayMode(GLUT_SINGLE|GLUT_RGB);
     glutInitWindowPosition(0, 0);
     glutInitWindowSize(600, 500);
     glutCreateWindow("Shooting Game");
     init();
     glutIdleFunc(refresh);
     glutKeyboardFunc(keyPressed);
-    glutKeyboardUpFunc(keyReleased);
-    glutPassiveMotionFunc(passiveMotionFunc);
-    glutMouseFunc(mouseClick);
-    glGetIntegerv(GL_VIEWPORT ,m_viewport);
-    glutIdleFunc(idle);
+	glutKeyboardUpFunc(keyReleased);
+	glutPassiveMotionFunc(passiveMotionFunc);
+	glutMouseFunc(mouseClick);
+	glGetIntegerv(GL_VIEWPORT ,m_viewport);
+	glutIdleFunc(idle);
     glutDisplayFunc(display);
     glutMainLoop();
 }
