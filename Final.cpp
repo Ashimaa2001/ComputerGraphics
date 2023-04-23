@@ -34,8 +34,6 @@ float balloonSpeedX= 0.5f;
 float balloonSpeedY= 0.5f;
 float balloonSpeed2X= 0.5f;
 float balloonSpeed2Y= 0.5f;
-float d=0;
-int lives=100;
 bool win= false;
 
 float balloonRadius = 40.0f;
@@ -101,8 +99,6 @@ void startScreenDisplay()
 	glColor3f(0.0, 0.0, 0.0);
 
 
-	//glutPostRedisplay();
-
 	if(mouseX>=-200 && mouseX<=100 && mouseY>=-50 && mouseY<=40){
 		glColor3f(0 ,0 ,1) ;
 		if(mButtonPressed){
@@ -157,36 +153,6 @@ void DrawLaser(int x, int y, bool dir[]) {
 	glEnd();
 }
 
-void checkLaserContact(int x, int y, bool dir[], int xp, int yp, bool player1) {
-	int xend = -XMAX, yend = y;
-	xp += 8; yp += 8;
-	if(dir[0])
-		yend = YMAX;
-	else if(dir[1])
-		yend = -YMAX;
-
-	float m = (float)(yend - y) / (float)(xend - x);
-	float k = y - m * x ;
-	int r = 0.01;
-
-	float b = 2 * xp - 2 * m * (k - yp);
-	float a = 1 + m * m;
-	float c = xp * xp + (k - yp) * (k - yp) - r * r;
-
-	d = (b * b - 4 * a * c);
-	if((d>=0)) {
-		if(player1){
-			cout<<"That's a hit "<<endl;
-			balloonRadius/=1.02;
-			if(balloonRadius<20.0){
-                viewPage= GAME_OVER;
-                balloonRadius= 40.0;
-                win= true;
-			}
-			}
-	}
-}
-
 void checkLaser(int x, int y, int x1, int y1,int x2, int y2){
     if(balloonRadius<20.0 && balloon2Radius<20.0){
         balloonRadius= 40.0;
@@ -223,7 +189,7 @@ void checkPlayerContact(float X, float Y) {
 
 void drawBalloon(float X,float Y, float R) {
 
-    glColor3f(0.7f, 0.7f, 0.7f); // Set color to red
+    glColor3f(0.7f, 0.7f, 0.7f);
     glBegin(GL_POLYGON);
     for (int i = 0; i < 360; i += 10) {
         float theta = i * 3.1415926 / 180.0f;
@@ -235,13 +201,12 @@ void drawBalloon(float X,float Y, float R) {
 }
 
 void idle() {
-    // Update balloon position
+
     balloonX += balloonSpeedX;
     balloonY += balloonSpeedY;
     balloon2X += balloonSpeed2X;
     balloon2Y += balloonSpeed2Y;
 
-    // Check for collision with window boundaries
     if (balloonX + balloonRadius > 1000.0f || balloonX - balloonRadius < -1000.0f) {
         balloonSpeedX = -balloonSpeedX; // Reverse X direction
     }
@@ -296,8 +261,6 @@ void gameStartDisplay()
     checkPlayerContact(balloon2X, balloon2Y);
     if(laser1) {
         DrawLaser(xOne, yOne, laser1Dir);
-        //checkLaserContact(xOne, yOne, laser1Dir, balloonX, balloonY, true);
-        //checkLaserContact(xOne, yOne, laser1Dir, balloon2X, balloon2Y, true);
         checkLaser(xOne, yOne, balloonX, balloonY,balloonY, balloon2Y);
     }
 }
