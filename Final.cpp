@@ -2,12 +2,12 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<math.h>
+#include<GL/glut.h>
 
 #define XMAX 1000
 #define YMAX 700
 #define SPEED 0.05
 
-#include<GL/glut.h>
 using namespace std;
 
 enum view {MENU, GAME, GAME_START, GAME_OVER};
@@ -15,7 +15,7 @@ view viewPage = MENU;
 float xOne = 720, yOne = 0;
 float xTwo = 720, yTwo = 300;
 bool mButtonPressed = false;
-bool laser1 = false;
+bool laser = false;
 bool keyStates[256] = {false};
 float mouseX, mouseY;
 GLint m_viewport[4];
@@ -160,14 +160,15 @@ void checkLaser(int x, int y, int x1, int y1,int x2, int y2){
 void checkPlayerContact(float X, float Y) {
 
 	if((X<xOne+50 && Y<yOne+50 && X>xOne && Y>yOne)) {
-			cout<<"Life reduced "<<endl;
+			cout<<"Game over"<<endl;
 			balloonRadius= 40.0;
             balloon2Radius= 40.0;
+            win= false;
 			viewPage=GAME_OVER;
 	}
 }
 
-void drawBalloon(float X,float Y, float R) {
+void drawBall(float X,float Y, float R) {
 
     glColor3f(0.7f, 0.7f, 0.7f);
     glBegin(GL_POLYGON);
@@ -188,17 +189,17 @@ void idle() {
     balloon2Y += balloonSpeed2Y;
 
     if (balloonX + balloonRadius > 1000.0f || balloonX - balloonRadius < -1000.0f) {
-        balloonSpeedX = -balloonSpeedX; // Reverse X direction
+        balloonSpeedX = -balloonSpeedX;
     }
     if (balloonY + balloonRadius > 700.0f || balloonY - balloonRadius < -700.0f) {
-        balloonSpeedY = -balloonSpeedY; // Reverse Y direction
+        balloonSpeedY = -balloonSpeedY;
     }
 
     if (balloon2X + balloonRadius > 1000.0f || balloon2X - balloonRadius < -1000.0f) {
-        balloonSpeed2X = -balloonSpeed2X; // Reverse X direction
+        balloonSpeed2X = -balloonSpeed2X;
     }
     if (balloon2Y + balloonRadius > 700.0f || balloon2Y - balloonRadius < -700.0f) {
-        balloonSpeed2Y = -balloonSpeed2Y; // Reverse Y direction
+        balloonSpeed2Y = -balloonSpeed2Y;
     }
 
     glutPostRedisplay();
@@ -209,8 +210,8 @@ void gameScreenDisplay()
 {
     DrawPlayer();
 
-    drawBalloon(balloonX, balloonY, balloonRadius);
-    drawBalloon(balloon2X, balloon2Y, balloon2Radius);
+    drawBall(balloonX, balloonY, balloonRadius);
+    drawBall(balloon2X, balloon2Y, balloon2Radius);
     glColor3f(1.0, 1.0, 1.0);
     displayRasterText(-550, -550, 0.0,"Press ENTER to start the game");
     glColor3f(0.8,1,0);
@@ -235,11 +236,11 @@ void gameScreenDisplay()
 void gameStartDisplay()
 {
     DrawPlayer();
-    drawBalloon(balloonX, balloonY, balloonRadius);
-    drawBalloon(balloon2X, balloon2Y, balloon2Radius);
+    drawBall(balloonX, balloonY, balloonRadius);
+    drawBall(balloon2X, balloon2Y, balloon2Radius);
     checkPlayerContact(balloonX, balloonY);
     checkPlayerContact(balloon2X, balloon2Y);
-    if(laser1) {
+    if(laser) {
         DrawLaser(xOne, yOne);
         checkLaser(xOne, yOne, balloonX, balloonY,balloonY, balloon2Y);
     }
@@ -260,14 +261,14 @@ void gameOverDisplay()
 	glLineWidth(1);
 
 	glColor3f(0.0, 0.95, 0.99);
-	glBegin(GL_POLYGON);				//Start Game Button
+	glBegin(GL_POLYGON);
 		glVertex2f(-250 ,-50);
 		glVertex2f(-250 ,40);
 		glVertex2f(250 ,40);
 		glVertex2f(250 ,-50);
 	glEnd();
 
-	glBegin(GL_POLYGON);				//Quit Button
+	glBegin(GL_POLYGON);
 		glVertex2f(-250 ,-300);
 		glVertex2f(-250 ,-210);
 		glVertex2f(250, -210);
@@ -323,10 +324,10 @@ void keyOperations(){
 		viewPage = GAME_START;
 	}
     if(keyStates['s'] == true) {
-			laser1 = true;
+			laser = true;
 		}
 		else {
-			laser1 = false;
+			laser = false;
 			if(keyStates['d'] == true) xOne+=SPEED;
 			if(keyStates['a'] == true) xOne-=SPEED;
 			if(keyStates['w'] == true) yOne+=SPEED;
