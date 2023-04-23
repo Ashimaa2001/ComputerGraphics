@@ -3,17 +3,11 @@
 #include<stdlib.h>
 #include<math.h>
 
-
-#define XMAX 1200
+#define XMAX 1000
 #define YMAX 700
 #define SPEED 0.05
-#define TOP 0
-#define RIGHT 1
-#define BOTTOM 2
-#define LEFT 3
 
 #include<GL/glut.h>
-#include <time.h>
 using namespace std;
 
 enum view {MENU, GAME, GAME_START, GAME_OVER};
@@ -24,27 +18,18 @@ bool mButtonPressed = false;
 bool laser1 = false;
 bool keyStates[256] = {false};
 float mouseX, mouseY;
-bool laser1Dir[2] = {false};
 GLint m_viewport[4];
 float balloonX = -800.0f;
 float balloonY = 0.0f;
 float balloon2X= 0.0f;
 float balloon2Y= -600.0f;
+float balloonRadius = 40.0f;
+float balloon2Radius = 40.0f;
 float balloonSpeedX= 0.5f;
 float balloonSpeedY= 0.5f;
 float balloonSpeed2X= 0.5f;
 float balloonSpeed2Y= 0.5f;
 bool win= false;
-
-float balloonRadius = 40.0f;
-float balloon2Radius = 40.0f;
-int alienLife1 = 100;
-
-void delay(float secs)
-{
-	float end = clock()/CLOCKS_PER_SEC + secs;
-	while((clock()/CLOCKS_PER_SEC) < end);
-}
 
 void init()
 {
@@ -104,7 +89,6 @@ void startScreenDisplay()
 		if(mButtonPressed){
 			viewPage = GAME;
 			mButtonPressed = false;
-			alienLife1 = 100;
 		}
 	} else
 		glColor3f(0 , 0, 0);
@@ -121,7 +105,7 @@ void startScreenDisplay()
 	}
 	else
 		glColor3f(0 , 0, 0);
-    displayRasterText(-100 ,-280 ,0.4 ,"Quit");
+        displayRasterText(-100 ,-280 ,0.4 ,"Quit");
 
 }
 
@@ -137,13 +121,9 @@ void DrawPlayer(){
 
 }
 
-void DrawLaser(int x, int y, bool dir[]) {
+void DrawLaser(int x, int y) {
 
 	int xend = -XMAX, yend = y;
-	if(dir[0])
-		yend = YMAX;
-	else if(dir[1])
-		yend = -YMAX;
 	glLineWidth(2.5);
 	glColor3f(0, 1, 0);
 	glBegin(GL_LINES);
@@ -260,7 +240,7 @@ void gameStartDisplay()
     checkPlayerContact(balloonX, balloonY);
     checkPlayerContact(balloon2X, balloon2Y);
     if(laser1) {
-        DrawLaser(xOne, yOne, laser1Dir);
+        DrawLaser(xOne, yOne);
         checkLaser(xOne, yOne, balloonX, balloonY,balloonY, balloon2Y);
     }
 }
@@ -309,7 +289,6 @@ void gameOverDisplay()
 		if(mButtonPressed){
 			viewPage = GAME;
 			mButtonPressed = false;
-			alienLife1 = 100;
 		}
 	} else
 		glColor3f(0 , 0, 0);
