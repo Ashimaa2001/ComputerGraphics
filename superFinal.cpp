@@ -131,7 +131,7 @@ void startScreenDisplay()
 	glColor3f(0.0, 0.0, 0.0);
 
 
-	if(mouseX>=-200 && mouseX<=100 && mouseY>=-50 && mouseY<=40){
+	if(mouseX>=-250 && mouseX<=250 && mouseY>=-40 && mouseY<=50){
 		glColor3f(0 ,0 ,1) ;
 		if(mButtonPressed){
 			viewPage = GAME;
@@ -143,7 +143,7 @@ void startScreenDisplay()
     displayRasterText(-200 ,-30 ,0.4 ,"Start Game");
 
 
-	if(mouseX>=-200 && mouseX<=100 && mouseY>=-170 && mouseY<=-100){
+	if(mouseX>=-250 && mouseX<=250 && mouseY>=-300 && mouseY<=-210){
 		glColor3f(0 ,0 ,1);
 		if(mButtonPressed){
 			mButtonPressed = false;
@@ -223,7 +223,7 @@ void checkLaser(int x, int y, int x1, int y1,int x2, int y2, int x3, int y3){
 }
 
 void checkPlayerContact(float X, float Y) {
-	if((X<xOne+40 && Y<yOne+40 && X>xOne && Y>yOne)) {
+	if((X<xOne+50 && Y<yOne+50 && X>xOne && Y>yOne)) {
             lives--;
             if(lives==0){
 			cout<<"Game over"<<endl;
@@ -358,7 +358,7 @@ void gameOverDisplay()
 	}
 	glColor3f(0.0, 0.0, 0.0);
 
-	if(mouseX>=-200 && mouseX<=100 && mouseY>=-50 && mouseY<=40){
+	if(mouseX>=-250 && mouseX<=250 && mouseY>=-50 && mouseY<=40){
 		glColor3f(0 ,0 ,1) ;
 		if(mButtonPressed){
 			viewPage = GAME;
@@ -368,7 +368,7 @@ void gameOverDisplay()
 		glColor3f(0 , 0, 0);
 
     displayRasterText(-200 ,-30 ,0.4 ,"New Game");
-		if(mouseX>=-200 && mouseX<=100 && mouseY>=-170 && mouseY<=-100){
+		if(mouseX>=-250 && mouseX<=250 && mouseY>=-300 && mouseY<=-210){
 		glColor3f(0 ,0 ,1);
 		if(mButtonPressed){
 			mButtonPressed = false;
@@ -432,8 +432,8 @@ void display()
 
 void passiveMotionFunc(int x,int y) {
 
-	mouseX = float(x)/(m_viewport[2]/1000.0)-600.0;
-	mouseY = -(float(y)/(m_viewport[3]/700.0)-350.0);
+    mouseX = (float)x / (m_viewport[2] / 2000.0) - 1000.0;
+    mouseY = -(float)y / (m_viewport[3] / 1400.0) + 700.0;
 
 	glutPostRedisplay();
 }
